@@ -1,6 +1,6 @@
 {
   "name": "drag-zoom-container",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "一个容器组件, 放进去的dom元素能够进行缩放和拖拽",
   "main": "lib/index.js",
   "scripts": {
@@ -16,6 +16,10 @@
     "react-drag-zoom",
     "react-drag-zoom-container"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RhysZhao/drag-zoom-container"
+  },
   "author": "rhys.zhao",
   "license": "ISC",
   "devDependencies": {
