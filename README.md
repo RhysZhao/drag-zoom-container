@@ -2,13 +2,15 @@
  * Author  rhys.zhao
  * Date  2021-09-16 13:23:39
  * LastEditors  rhys.zhao
- * LastEditTime  2022-06-07 10:31:10
+ * LastEditTime  2023-03-20 11:08:51
  * Description 拖拽、缩放容器组件
 -->
 
 ## 描述
 
 drag-zoom-container 是一个 React 容器组件，放在里面的组件可以拖拽，滚动缩放。
+
+在线效果：[https://rhyszhao.github.io/drag-zoom-container/](https://rhyszhao.github.io/drag-zoom-container/)
 
 ## 安装
 

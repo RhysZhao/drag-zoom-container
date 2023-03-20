@@ -5,3 +5,4 @@ yarn*
 dist
 dist.zip
 ignorecase = false
+lib

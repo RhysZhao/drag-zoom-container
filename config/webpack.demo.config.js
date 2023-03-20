@@ -1,9 +1,9 @@
 /*
  * Author  rhys.zhao
- * Date  2022-01-28 15:24:07
+ * Date  2023-03-20 10:13:46
  * LastEditors  rhys.zhao
- * LastEditTime  2023-03-20 10:36:33
- * Description webpack开发环境配置
+ * LastEditTime  2023-03-20 11:06:18
+ * Description
  */
 const path = require('path');
 const { merge } = require('webpack-merge');
@@ -11,20 +11,18 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const baseConfig = require('./webpack.base.js'); // 引用公共配置
 
-const devConfig = {
-  mode: 'development',
-  devtool: 'eval-cheap-module-source-map',
+const demoConfig = {
+  mode: 'production',
   entry: path.join(__dirname, '../example/app.js'),
-  devServer: {
-    compress: true,
-    host: '127.0.0.1',
-    port: 11111,
-    open: true
+  output: {
+    path: path.join(__dirname, '../dist/'),
+    filename: 'index.js'
   },
   plugins: [
     new HtmlWebpackPlugin({
+      title: 'Demo',
       template: path.join(__dirname, '../example/index.html')
     })
   ]
 };
-module.exports = merge(devConfig, baseConfig);
+module.exports = merge(demoConfig, baseConfig);
