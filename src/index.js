@@ -2,20 +2,12 @@
  * Author  rhys.zhao
  * Date  2022-01-28 15:27:52
  * LastEditors  rhys.zhao
- * LastEditTime  2022-06-22 13:36:56
+ * LastEditTime  2023-04-26 16:53:15
  * Description 拖拽，缩放容器组件
  */
 import React, { useEffect, useRef } from 'react';
 import styles from './index.scss';
 
-let params = {
-  isDragging: false,
-  clientX: 0,
-  clientY: 0,
-  x: 0,
-  y: 0,
-  zoom: 1
-};
 const DragZoomContainer = (props) => {
   const {
     zoomOnInner = false,
@@ -27,12 +19,21 @@ const DragZoomContainer = (props) => {
     children
   } = props;
 
+  let params = {
+    isDragging: false,
+    clientX: 0,
+    clientY: 0,
+    x: 0,
+    y: 0,
+    zoom: 1
+  };
+
   const outerRef = useRef();
   const innerRef = useRef();
 
   // 滚动缩放
   const onWheel = (dom) => {
-    dom.onwheel = (e) => {
+    const wheelListener = (e) => {
       e.preventDefault();
       e = e || window.event;
       params.zoom += e.wheelDelta / 1200;
@@ -43,11 +44,15 @@ const DragZoomContainer = (props) => {
       inner.style.transform = `scale(${params.zoom})`;
       inner.style.transformOrigin = zoomOrigin;
     };
+
+    dom.addEventListener('wheel', wheelListener);
+
+    return wheelListener;
   };
   // 拖拽
   const onDrag = (inner, container = document) => {
     // 鼠标按下
-    inner.onmousedown = (e) => {
+    const mouseDownListener = (e) => {
       if (e.buttons === 2) {
         return;
       }
@@ -61,8 +66,9 @@ const DragZoomContainer = (props) => {
       params.x = inner.offsetLeft;
       params.y = inner.offsetTop;
     };
+
     // 鼠标移动
-    container.onmousemove = (e) => {
+    const mouseMoveListener = (e) => {
       e = e || window.event;
       if (params.isDragging) {
         // 计算鼠标上下左右移动
@@ -79,25 +85,42 @@ const DragZoomContainer = (props) => {
         params.clientY = e.clientY;
       }
     };
+
     // 鼠标弹起
-    document.onmouseup = () => {
+    const mouseUpListener = () => {
       params.isDragging = false;
     };
+
+    inner.addEventListener('mousedown', mouseDownListener);
+    container.addEventListener('mousemove', mouseMoveListener);
+    document.addEventListener('mouseup', mouseUpListener);
+
+    return [mouseDownListener, mouseMoveListener, mouseUpListener];
   };
 
   useEffect(() => {
     const inner = innerRef.current;
     const outer = outerRef.current;
+
     // 初始化inner在容器中的位置
     const { top, left } = position;
     inner.style.left = left + 'px';
     inner.style.top = top + 'px';
+
     // 拖拽事件
     const container = dragInDocument ? window.document : outer;
-    onDrag(inner, container);
+    const [mouseDownListener, mouseMoveListener, mouseUpListener] = onDrag(inner, container);
+
     // 缩放事件
     const zoomOn = zoomOnInner ? inner : outer;
-    onWheel(zoomOn);
+    const wheelListener = onWheel(zoomOn);
+    return () => {
+      inner.removeEventListener('mousedown', mouseDownListener);
+      container.removeEventListener('mousemove', mouseMoveListener);
+      document.removeEventListener('mouseup', mouseUpListener);
+
+      zoomOn.removeEventListener('wheel', wheelListener);
+    };
   }, []);
   return (
     <div style={outerStyle} className={styles.outer} ref={outerRef}>

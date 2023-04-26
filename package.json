@@ -1,6 +1,6 @@
 {
   "name": "drag-zoom-container",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "一个容器组件, 放进去的dom元素能够进行缩放和拖拽",
   "main": "lib/index.js",
   "scripts": {
